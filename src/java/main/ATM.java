@@ -1,10 +1,12 @@
+package java.main;
+
 import java.util.HashMap;
 
 /**
  * @author Josue Villanueva
  * ATM class to execute transactions with accounts
  */
-class ATM {
+public class ATM {
 
     private final double OVERDRAFT_FEE = 5;
     private double atmBalance = 10000;
@@ -17,7 +19,7 @@ class ATM {
      * @param account_id is the account_id to be added
      * @param account is the Account object to be added
      */
-    void addAccount(long account_id, Account account) {
+    public void addAccount(long account_id, Account account) {
         accounts.put(account_id, account);
     }
 
@@ -25,7 +27,7 @@ class ATM {
      * Return all accounts that are on the ATM (set accounts)
      * @return return all accounts on ATM
      */
-    HashMap<Long, Account> getAccounts() {
+    public HashMap<Long, Account> getAccounts() {
         return this.accounts;
     }
 
@@ -34,7 +36,7 @@ class ATM {
      * @param account_id is the account_id to be checked for
      * @return whether the account exists or not
      */
-    boolean checkAccountExistence(long account_id) {
+    public boolean checkAccountExistence(long account_id) {
         return accounts.containsKey(account_id);
     }
 
@@ -55,7 +57,7 @@ class ATM {
     /**
      * @return the ATM overdraft fee constant
      */
-    double getATMOverdraftFee() {
+    public double getATMOverdraftFee() {
         return this.OVERDRAFT_FEE;
     }
 

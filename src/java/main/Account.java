@@ -1,3 +1,5 @@
+package java.main;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -5,8 +7,7 @@ import java.util.ArrayList;
  * This is the Account class used by ATM to process account related transactions
  * @author Josue Villanueva (idjevm)
  */
-
-class Account {
+public class Account {
     private long account_id;
     private int account_pin;
     private double account_balance;
@@ -15,12 +16,12 @@ class Account {
 
     /**
      *
-     * * Class constructor to create Account Objects
+     * * Class constructor to create Account objects
      * @param account_id is the account_id
      * @param account_pin is the account pin
      * @param account_balance is the initial balance of the account
      */
-    Account(long account_id, int account_pin, double account_balance) {
+    public Account(long account_id, int account_pin, double account_balance) {
         this.account_id = account_id;
         this.account_pin = account_pin;
         this.account_balance = account_balance;
@@ -29,9 +30,9 @@ class Account {
     /**
      * Deposits a given amount into the authorized account on the ATM
      * @param amount is the amount to deposit
-     * @param atm is the ATM object
+     * @param atm is the java.main.ATM object
      */
-    void deposit(double amount, ATM atm) {
+    public void deposit(double amount, ATM atm) {
         account_balance = account_balance + amount;
         atm.updateATMBalance(amount);
         addTransactionHistory(Util.getTimeStamp(), amount, account_balance);
@@ -40,9 +41,9 @@ class Account {
     /**
      * Withdraws a given amount from the authorized account on the ATM
      * @param amount is the amount to be withdrawn
-     * @param atm is the ATM object
+     * @param atm is the java.main.ATM object
      */
-    void withdraw(double amount, ATM atm) {
+    public void withdraw(double amount, ATM atm) {
         if (amount > account_balance) {
             account_balance = account_balance - atm.getATMOverdraftFee() - amount;
             isOverdrawn = true;
@@ -73,12 +74,12 @@ class Account {
      * Get the balance of the account
      * @return the account balance
      */
-    double getAccountBalance() {
+    public double getAccountBalance() {
         return this.account_balance;
     }
 
     /**
-     * Get account hisotry from Account
+     * Get account history from Account
      * @return the account history ArrayList
      */
     ArrayList<Transaction> getHistory() {

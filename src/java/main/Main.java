@@ -1,3 +1,5 @@
+package java.main;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Timer;
@@ -245,7 +247,7 @@ class Main {
 
     // Account logout
     private static void printLogoutMessage(ATM atm) {
-        System.out.println("main.java.main.java.com.takeoff.interview.Account " + atm.getAuthorizedAccountId() + " logged out.");
+        System.out.println("Account " + atm.getAuthorizedAccountId() + " logged out successfully.");
         atm.setAuthorized(false);
     }
 
