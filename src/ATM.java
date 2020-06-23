@@ -1,37 +1,40 @@
-import java.util.*;
+import java.util.HashMap;
 
-class ATM{
+class ATM {
 
-    private final int OVERDRAFT_FEE = 5;
+    private final double OVERDRAFT_FEE = 5;
     private double atmBalance = 10000;
     private HashMap<Long, Account> accounts = new HashMap<>();
     private boolean isAuthorized;
-    private String lastActivityTimestamp;
+    private long authorizedAccountId;
 
-
-
-    void addAccount(long account_id, Account account){
+    void addAccount(long account_id, Account account) {
         accounts.put(account_id, account);
     }
 
-    HashMap<Long, Account> getAccounts(){
+    /**
+     * Return all accounts that are on the ATM (set accounts)
+     *
+     * @return return all accounts on ATM
+     */
+    HashMap<Long, Account> getAccounts() {
         return this.accounts;
     }
 
-    boolean checkAccountExistence(long account_id){
+    boolean checkAccountExistence(long account_id) {
         return accounts.containsKey(account_id);
     }
 
-    void authorize(long account_id, int pin){
-        if(accounts.get(account_id).getAccountPin() == pin) {
+    void authorize(long account_id, int pin) {
+        if (accounts.get(account_id).getAccountPin() == pin) {
             setAuthorized(true);
-            setLastActivityTimestamp(Util.getTimeStamp().toString());
+            setAuthorizedAccountId(account_id);
         } else {
             setAuthorized(false);
         }
     }
 
-    int getATMOverdraftFee() {
+    double getATMOverdraftFee() {
         return this.OVERDRAFT_FEE;
     }
 
@@ -39,24 +42,23 @@ class ATM{
         this.isAuthorized = isAuthorized;
     }
 
-    boolean isAuthorized(){
+    boolean isAuthorized() {
         return this.isAuthorized;
     }
 
-    double getATMBalance(){
+    double getATMBalance() {
         return this.atmBalance;
     }
 
-    void updateATMBalance(double amount){
+    void updateATMBalance(double amount) {
         atmBalance = atmBalance + amount;
     }
 
-    void setLastActivityTimestamp(String lastActivityTimestamp) {
-        this.lastActivityTimestamp = lastActivityTimestamp;
+    void setAuthorizedAccountId(long account_id) {
+        this.authorizedAccountId = account_id;
     }
 
-    // TODO: use this to keep track of the last activity timestamp
-    String getLastActivityTimestamp(){
-        return this.lastActivityTimestamp;
+    long getAuthorizedAccountId() {
+        return this.authorizedAccountId;
     }
 }

@@ -1,7 +1,7 @@
-import java.util.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
-public class Account {
+class Account {
     private long account_id;
     private int pin;
     private double balance;
@@ -9,36 +9,38 @@ public class Account {
     private boolean isOverdrawn = false;
 
     // Account constructor
-    Account(long account_id, int pin, double balance){
+    Account(long account_id, int pin, double balance) {
         this.account_id = account_id;
         this.pin = pin;
         this.balance = balance;
     }
 
     // deposit into an authorized account
-    void deposit(double amount, ATM atm){
+    void deposit(double amount, ATM atm) {
         balance = balance + amount;
         atm.updateATMBalance(amount);
         addTransactionHistory(Util.getTimeStamp(), amount, balance);
     }
 
     // withdraw money from an authorized account
-    void withdraw(double amount, ATM atm){
-        if(amount > balance) {
+    void withdraw(double amount, ATM atm) {
+        if (amount > balance) {
             balance = balance - atm.getATMOverdraftFee() - amount;
             isOverdrawn = true;
-        }else if(amount > atm.getATMBalance()){
-
-        }
-        else{
+        } else {
             balance = balance - amount;
         }
         atm.updateATMBalance(-amount);
         addTransactionHistory(Util.getTimeStamp(), -amount, balance);
     }
 
+    // get account id
+    long getAccountId() {
+        return this.account_id;
+    }
+
     // get account pin number
-    int getAccountPin(){
+    int getAccountPin() {
         return this.pin;
     }
 
@@ -53,13 +55,13 @@ public class Account {
     }
 
     // add a new transaction history to the account
-    void addTransactionHistory(Timestamp timestamp, double amount, double balance){
+    void addTransactionHistory(Timestamp timestamp, double amount, double balance) {
         Transaction transaction = new Transaction(timestamp, amount, balance);
         history.add(transaction);
     }
 
     // get isOverdraw for the account
-    boolean isOverdrawn(){
+    boolean isOverdrawn() {
         return this.isOverdrawn;
     }
 }
