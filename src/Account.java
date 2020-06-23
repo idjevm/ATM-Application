@@ -1,66 +1,105 @@
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+/**
+ * This is the Account class used by ATM to process account related transactions
+ * @author Josue Villanueva (idjevm)
+ */
+
 class Account {
     private long account_id;
-    private int pin;
-    private double balance;
+    private int account_pin;
+    private double account_balance;
     private ArrayList<Transaction> history = new ArrayList<>();
     private boolean isOverdrawn = false;
 
-    // Account constructor
-    Account(long account_id, int pin, double balance) {
+    /**
+     *
+     * * Class constructor to create Account Objects
+     * @param account_id is the account_id
+     * @param account_pin is the account pin
+     * @param account_balance is the initial balance of the account
+     */
+    Account(long account_id, int account_pin, double account_balance) {
         this.account_id = account_id;
-        this.pin = pin;
-        this.balance = balance;
+        this.account_pin = account_pin;
+        this.account_balance = account_balance;
     }
 
-    // deposit into an authorized account
+    /**
+     * Deposits a given amount into the authorized account on the ATM
+     * @param amount is the amount to deposit
+     * @param atm is the ATM object
+     */
     void deposit(double amount, ATM atm) {
-        balance = balance + amount;
+        account_balance = account_balance + amount;
         atm.updateATMBalance(amount);
-        addTransactionHistory(Util.getTimeStamp(), amount, balance);
+        addTransactionHistory(Util.getTimeStamp(), amount, account_balance);
     }
 
-    // withdraw money from an authorized account
+    /**
+     * Withdraws a given amount from the authorized account on the ATM
+     * @param amount is the amount to be withdrawn
+     * @param atm is the ATM object
+     */
     void withdraw(double amount, ATM atm) {
-        if (amount > balance) {
-            balance = balance - atm.getATMOverdraftFee() - amount;
+        if (amount > account_balance) {
+            account_balance = account_balance - atm.getATMOverdraftFee() - amount;
             isOverdrawn = true;
         } else {
-            balance = balance - amount;
+            account_balance = account_balance - amount;
         }
         atm.updateATMBalance(-amount);
-        addTransactionHistory(Util.getTimeStamp(), -amount, balance);
+        addTransactionHistory(Util.getTimeStamp(), -amount, account_balance);
     }
 
-    // get account id
+    /**
+     * Gets the account id from account
+     * @return the account_id from account
+     */
     long getAccountId() {
         return this.account_id;
     }
 
-    // get account pin number
+    /**
+     * Gets the pin number from account
+     * @return the account pin number
+     */
     int getAccountPin() {
-        return this.pin;
+        return this.account_pin;
     }
 
-    // get account balance
-    double getBalance() {
-        return this.balance;
+    /**
+     * Get the balance of the account
+     * @return the account balance
+     */
+    double getAccountBalance() {
+        return this.account_balance;
     }
 
-    // get transaction history from account
+    /**
+     * Get account hisotry from Account
+     * @return the account history ArrayList
+     */
     ArrayList<Transaction> getHistory() {
         return this.history;
     }
 
-    // add a new transaction history to the account
+    /**
+     *  Adds a new transaction  to the history arraylist
+     * @param timestamp is the timestamp that the transaction occurred
+     * @param amount is the amount of the transaction
+     * @param balance is the updated balance of the account
+     */
     void addTransactionHistory(Timestamp timestamp, double amount, double balance) {
         Transaction transaction = new Transaction(timestamp, amount, balance);
         history.add(transaction);
     }
 
-    // get isOverdraw for the account
+    /**
+     *  Returns the overdrawn state of the account
+     * @return the overdrawn state from account
+     */
     boolean isOverdrawn() {
         return this.isOverdrawn;
     }

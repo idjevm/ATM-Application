@@ -20,7 +20,7 @@ class Main {
         Account acc2 = new Account(7089382418L, 0075, 0.00);
         Account acc3 = new Account(2001377812L, 5950, 60.00);
 
-        // Adding accounts to the atm with annonymous subclass
+        // Adding accounts to the atm with anonymous subclass
         final ATM atm = new ATM() {
             {
                 addAccount(1, test1);
@@ -32,7 +32,7 @@ class Main {
         };
 
         Scanner scanner = new Scanner(System.in); // Create a Scanner object
-        System.out.println("Welcome to JV's main.java.main.java.com.takeoff.interview.ATM!");
+        System.out.println("Welcome to JV's ATM!");
         printMenu();
 
         while (true) {
@@ -71,7 +71,9 @@ class Main {
 
                 case WITHDRAW:
                     if (userInput.length < 2) {
-                        timer = Util.updateTimer(timer, atm);
+                        if (atm.isAuthorized()) {
+                            timer = Util.updateTimer(timer, atm);
+                        }
                         printErrorMessage(ErrorTypes.ARGS);
                         break;
                     }
@@ -90,6 +92,9 @@ class Main {
 
                 case DEPOSIT:
                     if (userInput.length < 2) {
+                        if (atm.isAuthorized()) {
+                            timer = Util.updateTimer(timer, atm);
+                        }
                         printErrorMessage(ErrorTypes.ARGS);
                         break;
                     }
@@ -97,8 +102,8 @@ class Main {
                         printErrorMessage(ErrorTypes.AUTH);
                         break;
                     }
+                    timer = Util.updateTimer(timer, atm);
                     try {
-                        timer = Util.updateTimer(timer, atm);
                         double depositAmount = Double.parseDouble(userInput[1]);
                         atm.getAccounts().get(atm.getAuthorizedAccountId()).deposit(depositAmount, atm);
                         atm.updateATMBalance(depositAmount);
@@ -140,13 +145,15 @@ class Main {
                     System.out.println("Thank you so much for using JV's ATM! Exiting now, Goodbye");
                     System.exit(0);
                 default:
-                    timer = Util.updateTimer(timer, atm);
+                    if (atm.isAuthorized()) {
+                        timer = Util.updateTimer(timer, atm);
+                    }
                     printErrorMessage(ErrorTypes.UNKNOWN_ARG);
             }
         }
     }
 
-    public static void printMenu() {
+    private static void printMenu() {
         System.out.println("-------------------------------------------------------------");
         System.out.println("You can use the following commands with <arguments>: \n");
         System.out.println("To login into your account use:  authorize <account_id> <pin>");
@@ -162,8 +169,9 @@ class Main {
     // ENUM for commands, will return unknown if requested enum does not exist
     public enum CommandsEnum {
 
-        AUTHORIZE("authorize"), WITHDRAW("withdraw"), DEPOSIT("deposit"), BALANCE("balance"), HISTORY("history"),
-        LOGOUT("logout"), HELP("help"), END("end"), UNKNOWN_COMMAND("unknown_command");
+        AUTHORIZE("authorize"), WITHDRAW("withdraw"), DEPOSIT("deposit"),
+        BALANCE("balance"), HISTORY("history"), LOGOUT("logout"),
+        HELP("help"), END("end"), UNKNOWN_COMMAND("unknown_command");
 
         private String value;
 
@@ -196,7 +204,7 @@ class Main {
 
     // get account balance
     private static double getAccountBalance(ATM atm) {
-        return atm.getAccounts().get(atm.getAuthorizedAccountId()).getBalance();
+        return atm.getAccounts().get(atm.getAuthorizedAccountId()).getAccountBalance();
     }
 
     // withdraw from account
@@ -235,7 +243,7 @@ class Main {
         return atm.isAuthorized();
     }
 
-    // main.java.main.java.com.takeoff.interview.Account logout
+    // Account logout
     private static void printLogoutMessage(ATM atm) {
         System.out.println("main.java.main.java.com.takeoff.interview.Account " + atm.getAuthorizedAccountId() + " logged out.");
         atm.setAuthorized(false);
@@ -255,9 +263,10 @@ class Main {
 
     // Enum for Error types
     public enum ErrorTypes {
-        AUTH("Authorization is required."), AUTH_FAILED("Authorization failed."), ARGS("Invalid number of arguments."),
-        NONEXISTENT("The account does not exist."), UNKNOWN_ARG("You have entered an invalid command."),
-        ALREADY_AUTHORIZED("Your account is already authorized."), INVALID_INPUT("Your input is not valid.");
+        AUTH("Authorization is required."), AUTH_FAILED("Authorization failed."),
+        ARGS("Invalid number of arguments."), NONEXISTENT("The account does not exist."),
+        UNKNOWN_ARG("You have entered an invalid command."), ALREADY_AUTHORIZED("Your account is already authorized."),
+        INVALID_INPUT("Your input is not valid.");
 
         private final String description;
 
