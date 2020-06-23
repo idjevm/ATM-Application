@@ -1,4 +1,4 @@
-package java.main;
+package main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,27 +13,17 @@ class Main {
 
     public static void main(String[] args) {
 
+        // create a Timer object
         Timer timer = new Timer();
 
-        // set up initial accounts at this atm
-        Account test1 = new Account(1, 1, 10.24);
-        Account test2 = new Account(123, 123, 200);
-        Account acc1 = new Account(1434597300L, 4557, 90000.55);
-        Account acc2 = new Account(7089382418L, 0075, 0.00);
-        Account acc3 = new Account(2001377812L, 5950, 60.00);
+        // create an ATM object
+        final ATM atm = new ATM();
 
-        // Adding accounts to the atm with anonymous subclass
-        final ATM atm = new ATM() {
-            {
-                addAccount(1, test1);
-                addAccount(123, test2);
-                addAccount(1434597300L, acc1);
-                addAccount(7089382418L, acc2);
-                addAccount(2001377812L, acc3);
-            }
-        };
+        // using utility to load accounts from CSV file
+        Util.loadAccountsFromCSV(atm);
 
-        Scanner scanner = new Scanner(System.in); // Create a Scanner object
+        // Create a Scanner object
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to JV's ATM!");
         printMenu();
 
@@ -81,6 +71,9 @@ class Main {
                     }
                     if (!atm.isAuthorized()) {
                         printErrorMessage(ErrorTypes.AUTH);
+                    } else if (atm.getAccounts().get(atm.getAuthorizedAccountId()).isOverdrawn()) {
+                        printErrorMessage(ErrorTypes.OVERDRAWN);
+                        timer = Util.updateTimer(timer, atm);
                     } else {
                         timer = Util.updateTimer(timer, atm);
                         try {
@@ -144,6 +137,7 @@ class Main {
                     printMenu();
                     break;
                 case END:
+                    Util.writeAccountsToCSV(atm);
                     System.out.println("Thank you so much for using JV's ATM! Exiting now, Goodbye");
                     System.exit(0);
                 default:
@@ -214,28 +208,24 @@ class Main {
         if (atm.getATMBalance() == 0) {
             System.out.println("Unable to process your withdrawal at this time.");
         }
-        if (!atm.getAccounts().get(atm.getAuthorizedAccountId()).isOverdrawn()) {
-            if (withdrawAmount > atm.getATMBalance()) {
-                System.out.println("Unable to dispense full amount requested at this time.");
-                withdraw(atm.getATMBalance(), atm);
-            } else if (withdrawAmount % 20 == 0) {
-                atm.getAccounts().get(atm.getAuthorizedAccountId()).withdraw(withdrawAmount, atm);
+        if (withdrawAmount > atm.getATMBalance()) {
+            System.out.println("Unable to dispense full amount requested at this time.");
+            withdraw(atm.getATMBalance(), atm);
+        } else if (withdrawAmount % 20 == 0) {
+            atm.getAccounts().get(atm.getAuthorizedAccountId()).withdraw(withdrawAmount, atm);
 
-                double account_balance = getAccountBalance(atm);
+            double account_balance = getAccountBalance(atm);
 
-                if (atm.getAccounts().get(atm.getAuthorizedAccountId()).isOverdrawn()) {
-                    System.out.println(String.format(
-                            "Amount dispensed: $%.2f \nYou have been charged an overdraft fee of $%.2f.  %s",
-                            withdrawAmount, atm.getATMOverdraftFee(), formatAccountBalanceStr(account_balance)));
-                } else {
-                    System.out.println(String.format("Amount dispensed: $%.2f  %s", withdrawAmount,
-                            formatAccountBalanceStr(account_balance)));
-                }
+            if (atm.getAccounts().get(atm.getAuthorizedAccountId()).isOverdrawn()) {
+                System.out.println(String.format(
+                        "Amount dispensed: $%.2f \nYou have been charged an overdraft fee of $%.2f.  %s",
+                        withdrawAmount, atm.getATMOverdraftFee(), formatAccountBalanceStr(account_balance)));
             } else {
-                System.out.println("Please withdraw an other amount (suggestion: 20$, 40$,...).");
+                System.out.println(String.format("Amount dispensed: $%.2f  %s", withdrawAmount,
+                        formatAccountBalanceStr(account_balance)));
             }
         } else {
-            System.out.println("Your account is overdrawn! You may not make withdrawals at this time.");
+            System.out.println("Please withdraw an other amount (suggestion: 20$, 40$,...).");
         }
     }
 
@@ -268,7 +258,7 @@ class Main {
         AUTH("Authorization is required."), AUTH_FAILED("Authorization failed."),
         ARGS("Invalid number of arguments."), NONEXISTENT("The account does not exist."),
         UNKNOWN_ARG("You have entered an invalid command."), ALREADY_AUTHORIZED("Your account is already authorized."),
-        INVALID_INPUT("Your input is not valid.");
+        INVALID_INPUT("Your input is not valid."), OVERDRAWN("Your account is overdrawn! You may not make withdrawals at this time.");
 
         private final String description;
 
@@ -304,6 +294,9 @@ class Main {
                 break;
             case INVALID_INPUT:
                 System.out.println(ErrorTypes.INVALID_INPUT.getErrorMessage(errorType));
+                break;
+            case OVERDRAWN:
+                System.out.println(ErrorTypes.OVERDRAWN.getErrorMessage(errorType));
                 break;
             default:
                 System.out.println("UNKNOWN ERROR");

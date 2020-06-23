@@ -1,7 +1,7 @@
-package java.tests;
+package tests;
 
-import java.main.ATM;
-import java.main.Account;
+import main.ATM;
+import main.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ class ATMTest {
     @BeforeEach
     void setUp() {
         atm = new ATM();
-        atm.addAccount(1, new Account(1, 4000, 20));
-        atm.addAccount(2, new Account(2, 4000, 20));
+        atm.addAccount(1, new Account(1, 4000, 20, false));
+        atm.addAccount(2, new Account(2, 4000, 20, false));
     }
 
     @Test

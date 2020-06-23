@@ -1,4 +1,4 @@
-package java.main;
+package main;
 
 import java.util.HashMap;
 
@@ -16,8 +16,9 @@ public class ATM {
 
     /**
      * adds a new account the the accounts object with the given account_id and account object
+     *
      * @param account_id is the account_id to be added
-     * @param account is the Account object to be added
+     * @param account    is the Account object to be added
      */
     public void addAccount(long account_id, Account account) {
         accounts.put(account_id, account);
@@ -25,6 +26,7 @@ public class ATM {
 
     /**
      * Return all accounts that are on the ATM (set accounts)
+     *
      * @return return all accounts on ATM
      */
     public HashMap<Long, Account> getAccounts() {
@@ -32,7 +34,8 @@ public class ATM {
     }
 
     /**
-     *  Checks if an account with a given id exists
+     * Checks if an account with a given id exists
+     *
      * @param account_id is the account_id to be checked for
      * @return whether the account exists or not
      */
@@ -42,8 +45,9 @@ public class ATM {
 
     /**
      * Authorizes an account with given account_id and pin
+     *
      * @param account_id is the account_id to be authorized
-     * @param pin is the account pin number
+     * @param pin        is the account pin number
      */
     void authorize(long account_id, int pin) {
         if (accounts.get(account_id).getAccountPin() == pin) {
@@ -63,6 +67,7 @@ public class ATM {
 
     /**
      * Sets the state of the account to authorized
+     *
      * @param isAuthorized is the current state of the account
      */
     void setAuthorized(boolean isAuthorized) {
@@ -86,6 +91,7 @@ public class ATM {
     /**
      * Updates the balance of the ATM by adding or subtracting
      * from the balance
+     *
      * @param amount is the transaction amount
      */
     void updateATMBalance(double amount) {

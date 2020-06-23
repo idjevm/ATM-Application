@@ -1,6 +1,6 @@
-package java.tests;
+package tests;
 
-import java.main.Transaction;
+import main.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

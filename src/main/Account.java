@@ -1,10 +1,11 @@
-package java.main;
+package main;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
  * This is the Account class used by ATM to process account related transactions
+ *
  * @author Josue Villanueva (idjevm)
  */
 public class Account {
@@ -15,35 +16,41 @@ public class Account {
     private boolean isOverdrawn = false;
 
     /**
-     *
      * * Class constructor to create Account objects
-     * @param account_id is the account_id
-     * @param account_pin is the account pin
+     *
+     * @param account_id      is the account_id
+     * @param account_pin     is the account pin
      * @param account_balance is the initial balance of the account
      */
-    public Account(long account_id, int account_pin, double account_balance) {
+    public Account(long account_id, int account_pin, double account_balance, boolean isOverdrawn) {
         this.account_id = account_id;
         this.account_pin = account_pin;
         this.account_balance = account_balance;
+        this.isOverdrawn = isOverdrawn;
     }
 
     /**
      * Deposits a given amount into the authorized account on the ATM
+     *
      * @param amount is the amount to deposit
-     * @param atm is the java.main.ATM object
+     * @param atm    is the main.ATM object
      */
-    public void deposit(double amount, ATM atm) {
+    void deposit(double amount, ATM atm) {
         account_balance = account_balance + amount;
+        if (account_balance >= 0) {
+            this.isOverdrawn = false;
+        }
         atm.updateATMBalance(amount);
         addTransactionHistory(Util.getTimeStamp(), amount, account_balance);
     }
 
     /**
      * Withdraws a given amount from the authorized account on the ATM
+     *
      * @param amount is the amount to be withdrawn
-     * @param atm is the java.main.ATM object
+     * @param atm    is the main.ATM object
      */
-    public void withdraw(double amount, ATM atm) {
+    void withdraw(double amount, ATM atm) {
         if (amount > account_balance) {
             account_balance = account_balance - atm.getATMOverdraftFee() - amount;
             isOverdrawn = true;
@@ -56,6 +63,7 @@ public class Account {
 
     /**
      * Gets the account id from account
+     *
      * @return the account_id from account
      */
     long getAccountId() {
@@ -64,6 +72,7 @@ public class Account {
 
     /**
      * Gets the pin number from account
+     *
      * @return the account pin number
      */
     int getAccountPin() {
@@ -72,6 +81,7 @@ public class Account {
 
     /**
      * Get the balance of the account
+     *
      * @return the account balance
      */
     public double getAccountBalance() {
@@ -80,6 +90,7 @@ public class Account {
 
     /**
      * Get account history from Account
+     *
      * @return the account history ArrayList
      */
     ArrayList<Transaction> getHistory() {
@@ -87,10 +98,11 @@ public class Account {
     }
 
     /**
-     *  Adds a new transaction  to the history arraylist
+     * Adds a new transaction  to the history arraylist
+     *
      * @param timestamp is the timestamp that the transaction occurred
-     * @param amount is the amount of the transaction
-     * @param balance is the updated balance of the account
+     * @param amount    is the amount of the transaction
+     * @param balance   is the updated balance of the account
      */
     void addTransactionHistory(Timestamp timestamp, double amount, double balance) {
         Transaction transaction = new Transaction(timestamp, amount, balance);
@@ -98,7 +110,8 @@ public class Account {
     }
 
     /**
-     *  Returns the overdrawn state of the account
+     * Returns the overdrawn state of the account
+     *
      * @return the overdrawn state from account
      */
     boolean isOverdrawn() {
