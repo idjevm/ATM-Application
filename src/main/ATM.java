@@ -66,19 +66,19 @@ public class ATM {
     }
 
     /**
+     * @return the authorized state of the account
+     */
+    boolean isAuthorized() {
+        return this.isAuthorized;
+    }
+
+    /**
      * Sets the state of the account to authorized
      *
      * @param isAuthorized is the current state of the account
      */
     void setAuthorized(boolean isAuthorized) {
         this.isAuthorized = isAuthorized;
-    }
-
-    /**
-     * @return the authorized state of the account
-     */
-    boolean isAuthorized() {
-        return this.isAuthorized;
     }
 
     /**
@@ -99,16 +99,16 @@ public class ATM {
     }
 
     /**
-     * @param account_id is the account_id that was authorized successfully
-     */
-    void setAuthorizedAccountId(long account_id) {
-        this.authorizedAccountId = account_id;
-    }
-
-    /**
      * @return the account_id of the current authorized account
      */
     long getAuthorizedAccountId() {
         return this.authorizedAccountId;
+    }
+
+    /**
+     * @param account_id is the account_id that was authorized successfully
+     */
+    void setAuthorizedAccountId(long account_id) {
+        this.authorizedAccountId = account_id;
     }
 }

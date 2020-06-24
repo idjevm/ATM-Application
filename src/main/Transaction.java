@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * Transaction class to create a time stamp on a transaction
+ *
  * @author Josue Villanueva
  */
 public class Transaction {
@@ -15,9 +16,10 @@ public class Transaction {
 
     /**
      * Transaction constructor to create a new transaction obj
-     * @param timestamp is the timestamp when the transaction occurred
+     *
+     * @param timestamp         is the timestamp when the transaction occurred
      * @param transactionAmount is the amount of the transaction
-     * @param accountBalance is the updated balance of the account
+     * @param accountBalance    is the updated balance of the account
      */
     public Transaction(Timestamp timestamp, double transactionAmount, double accountBalance) {
         this.timestamp = timestamp;
