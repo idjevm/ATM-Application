@@ -14,6 +14,11 @@ import java.util.TimerTask;
  */
 class Util {
 
+    private static final String FILE_HEADER = "ACCOUNT_ID,PIN,BALANCE";
+    private static final String DELIMITER = ",";
+    private static final String NEW_LINE_SEPARATOR = "\n";
+    private static final String FILE_PATH_NAME = "/Users/idjevm/Desktop/GitHub/takeofftechnologies/src/data/accounts.csv";
+
     /**
      * Static method to get a timestamp
      *
@@ -34,32 +39,9 @@ class Util {
     static Timer updateTimer(Timer timer, ATM atm) {
         timer.cancel();
         timer = new Timer();
-        timer.schedule(new ATMTask(atm), 10000L);
+        timer.schedule(new ATMTask(atm), 120000L);
         return timer;
     }
-
-    /**
-     * ATMTask that inherits TimerTask to be able to build a new ATM constructor
-     * Logs out the user by setting the authorized state to false
-     * NOTE: only will be executed if there are no interactions for 2 mins
-     */
-    static class ATMTask extends TimerTask {
-        ATM atm;
-
-        ATMTask(ATM atm) {
-            this.atm = atm;
-        }
-
-        public void run() {
-            atm.setAuthorized(false);
-            System.out.println("You have been locked out automatically.");
-        }
-    }
-
-    private static final String FILE_HEADER = "ACCOUNT_ID,PIN,BALANCE";
-    private static final String DELIMITER = ",";
-    private static final String NEW_LINE_SEPARATOR = "\n";
-    private static final String FILE_PATH_NAME = "/Users/idjevm/Desktop/GitHub/takeofftechnologies/src/data/accounts.csv";
 
     // method to write to file once the user enters logout command
     static void writeAccountsToCSV(ATM atm) {
@@ -104,6 +86,24 @@ class Util {
             sc.close();  //closes the scanner
         } catch (Exception e) {
             e.getMessage();
+        }
+    }
+
+    /**
+     * ATMTask that inherits TimerTask to be able to build a new ATM constructor
+     * Logs out the user by setting the authorized state to false
+     * NOTE: only will be executed if there are no interactions for 2 mins
+     */
+    static class ATMTask extends TimerTask {
+        ATM atm;
+
+        ATMTask(ATM atm) {
+            this.atm = atm;
+        }
+
+        public void run() {
+            atm.setAuthorized(false);
+            System.out.println("You have been locked out automatically.");
         }
     }
 }

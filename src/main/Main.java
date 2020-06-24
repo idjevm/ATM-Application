@@ -162,37 +162,6 @@ class Main {
         System.out.println("-------------------------------------------------------------");
     }
 
-    // ENUM for commands, will return unknown if requested enum does not exist
-    public enum CommandsEnum {
-
-        AUTHORIZE("authorize"), WITHDRAW("withdraw"), DEPOSIT("deposit"),
-        BALANCE("balance"), HISTORY("history"), LOGOUT("logout"),
-        HELP("help"), END("end"), UNKNOWN_COMMAND("unknown_command");
-
-        private String value;
-
-        CommandsEnum(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return this.getValue();
-        }
-
-        // Creating this method to return UNKNOWN if requested enum is not present
-        public static CommandsEnum getEnum(String value) {
-            for (CommandsEnum enumCommand : values())
-                if (enumCommand.getValue().equalsIgnoreCase(value))
-                    return enumCommand;
-            return UNKNOWN_COMMAND;
-        }
-    }
-
     // format the account balance string
     private static String formatAccountBalanceStr(double account_balance) {
         return String.format("Current balance: $%.2f", account_balance);
@@ -253,24 +222,6 @@ class Main {
         }
     }
 
-    // Enum for Error types
-    public enum ErrorTypes {
-        AUTH("Authorization is required."), AUTH_FAILED("Authorization failed."),
-        ARGS("Invalid number of arguments."), NONEXISTENT("The account does not exist."),
-        UNKNOWN_ARG("You have entered an invalid command."), ALREADY_AUTHORIZED("Your account is already authorized."),
-        INVALID_INPUT("Your input is not valid."), OVERDRAWN("Your account is overdrawn! You may not make withdrawals at this time.");
-
-        private final String description;
-
-        ErrorTypes(String description) {
-            this.description = description;
-        }
-
-        public String getErrorMessage(ErrorTypes errorType) {
-            return String.format("%s Error: %s Please try again!", errorType, description);
-        }
-    }
-
     // print errors
     private static void printErrorMessage(ErrorTypes errorType) {
         switch (errorType) {
@@ -300,6 +251,55 @@ class Main {
                 break;
             default:
                 System.out.println("UNKNOWN ERROR");
+        }
+    }
+
+    // ENUM for commands, will return unknown if requested enum does not exist
+    public enum CommandsEnum {
+
+        AUTHORIZE("authorize"), WITHDRAW("withdraw"), DEPOSIT("deposit"),
+        BALANCE("balance"), HISTORY("history"), LOGOUT("logout"),
+        HELP("help"), END("end"), UNKNOWN_COMMAND("unknown_command");
+
+        private String value;
+
+        CommandsEnum(String value) {
+            this.value = value;
+        }
+
+        // Creating this method to return UNKNOWN if requested enum is not present
+        public static CommandsEnum getEnum(String value) {
+            for (CommandsEnum enumCommand : values())
+                if (enumCommand.getValue().equalsIgnoreCase(value))
+                    return enumCommand;
+            return UNKNOWN_COMMAND;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return this.getValue();
+        }
+    }
+
+    // Enum for Error types
+    public enum ErrorTypes {
+        AUTH("Authorization is required."), AUTH_FAILED("Authorization failed."),
+        ARGS("Invalid number of arguments."), NONEXISTENT("The account does not exist."),
+        UNKNOWN_ARG("You have entered an invalid command."), ALREADY_AUTHORIZED("Your account is already authorized."),
+        INVALID_INPUT("Your input is not valid."), OVERDRAWN("Your account is overdrawn! You may not make withdrawals at this time.");
+
+        private final String description;
+
+        ErrorTypes(String description) {
+            this.description = description;
+        }
+
+        public String getErrorMessage(ErrorTypes errorType) {
+            return String.format("%s Error: %s Please try again!", errorType, description);
         }
     }
 }
